@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -594,17 +595,41 @@
       document.getElementById("loginTab").classList.add("active");
     }
 
-    function registerUser(event) {
-      event.preventDefault();
+    async function registerUser(event) {
+  event.preventDefault();
 
-      const name = document.getElementById("registerName").value;
+  const name = document.getElementById("registerName").value.trim();
+  const phone = document.getElementById("registerPhone").value.trim();
+  const email = document.getElementById("registerEmail").value.trim();
+  const password = document.getElementById("registerPassword").value;
+  const referralCode = document.getElementById("referralCode").value.trim();
 
-      document.getElementById("registerMessage").textContent =
-        "Registration form received for " +
-        name +
-        ". Backend connection will be added next.";
+  const message = document.getElementById("registerMessage");
 
-      document.getElementById("registerForm").reset();
+  message.textContent = "Creating your account...";
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        full_name: name,
+        phone: phone,
+        referral_code: referralCode
+      }
+    }
+  });
+
+  if (error) {
+    message.textContent = error.message;
+    return;
+  }
+
+  message.textContent =
+    "Registration successful. Check your email to confirm your account.";
+
+  document.getElementById("registerForm").reset();
+};
     }
 
     function loginUser(event) {
@@ -616,5 +641,14 @@
       document.getElementById("loginForm").reset();
     }
   </script>
+  const SUPABASE_URL = "https://rklxtxpqegveirqpnywo.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_-Bra-S7LPf6Snl26KMW3qg_Fuid5gCH";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 </body>
   </html>
