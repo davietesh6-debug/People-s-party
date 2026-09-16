@@ -1,1 +1,620 @@
-index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>People's Party</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0756b8, #0b8de3);
+      color: white;
+      padding: 18px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 25px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 18px;
+      font-size: 14px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0756b8, #0b8de3);
+      color: white;
+      padding: 65px 7% 90px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero h2 {
+      font-size: 44px;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 25px;
+      max-width: 600px;
+    }
+
+    .button {
+      display: inline-block;
+      background: white;
+      color: #0756b8;
+      padding: 13px 23px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      margin-right: 8px;
+    }
+
+    .button.secondary {
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+    }
+
+    .hero-card {
+      background: white;
+      color: #172033;
+      padding: 28px;
+      border-radius: 18px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-card h3 {
+      color: #0756b8;
+      margin-bottom: 15px;
+    }
+
+    .hero-card p {
+      color: #5e6878;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .hero-card .amount {
+      font-size: 34px;
+      font-weight: bold;
+      color: #0756b8;
+      margin: 20px 0;
+    }
+
+    section {
+      padding: 55px 7%;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title h2 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .section-title p {
+      color: #687386;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: white;
+      padding: 27px;
+      border-radius: 14px;
+      box-shadow: 0 5px 20px rgba(20, 40, 80, 0.06);
+      border: 1px solid #e7edf5;
+    }
+
+    .card .icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e8f3ff;
+      color: #0756b8;
+      border-radius: 12px;
+      font-size: 23px;
+      margin-bottom: 18px;
+    }
+
+    .card h3 {
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: #687386;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .auth-section {
+      background: #eaf3ff;
+    }
+
+    .auth-container {
+      max-width: 480px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(20, 40, 80, 0.08);
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 25px;
+      border-bottom: 1px solid #e3e8ef;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 13px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-weight: bold;
+      color: #6b7483;
+    }
+
+    .tab.active {
+      color: #0756b8;
+      border-bottom: 3px solid #0756b8;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d6dfe9;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #0b8de3;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: #0756b8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .form-message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #0756b8;
+      text-align: center;
+    }
+
+    .dashboard {
+      display: none;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .dashboard-header {
+      background: linear-gradient(135deg, #0756b8, #0b8de3);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 22px;
+    }
+
+    .dashboard-header h2 {
+      margin-bottom: 10px;
+    }
+
+    .balance {
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    .dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .dashboard-card {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      border: 1px solid #e4eaf2;
+    }
+
+    .dashboard-card span {
+      display: block;
+      color: #687386;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .dashboard-card strong {
+      font-size: 24px;
+      color: #0756b8;
+    }
+
+    .deposit-box {
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      border: 1px solid #e4eaf2;
+    }
+
+    .deposit-box h3 {
+      margin-bottom: 15px;
+    }
+
+    .deposit-box p {
+      line-height: 1.7;
+      color: #586577;
+      margin-bottom: 10px;
+    }
+
+    .highlight {
+      color: #0756b8;
+      font-weight: bold;
+    }
+
+    footer {
+      background: #101c2d;
+      color: white;
+      text-align: center;
+      padding: 25px;
+      font-size: 14px;
+    }
+
+    footer p {
+      color: #c1ccda;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 45px;
+      }
+
+      .hero h2 {
+        font-size: 34px;
+      }
+
+      .cards,
+      .dashboard-cards {
+        grid-template-columns: 1fr;
+      }
+
+      nav a {
+        margin-left: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>People's Party</h1>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#auth">Login/Register</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div>
+        <h2>Grow Together.<br />Earn Together.</h2>
+
+        <p>
+          Welcome to People's Party, a referral-based platform where members
+          can deposit funds, invite friends, and track their account activity.
+        </p>
+
+        <a href="#auth" class="button">Get Started</a>
+        <a href="#how-it-works" class="button secondary">Learn More</a>
+      </div>
+
+      <div class="hero-card">
+        <h3>Account Preview</h3>
+        <p>Available balance</p>
+        <div class="amount">KES 0.00</div>
+        <p>Invite friends and monitor your earnings from your dashboard.</p>
+      </div>
+    </section>
+
+    <section id="how-it-works">
+      <div class="section-title">
+        <h2>How People's Party Works</h2>
+        <p>Simple steps to get started.</p>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="icon">1</div>
+          <h3>Create an Account</h3>
+          <p>
+            Register using your name, phone number, email address, and
+            password.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="icon">2</div>
+          <h3>Make a Deposit</h3>
+          <p>
+            Follow the deposit instructions and submit your transaction
+            details for verification.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="icon">3</div>
+          <h3>Refer Friends</h3>
+          <p>
+            Invite friends using your referral link and track your referral
+            activity from your dashboard.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-section" id="auth">
+      <div class="section-title">
+        <h2>Join People's Party</h2>
+        <p>Create an account or log in to continue.</p>
+      </div>
+
+      <div class="auth-container">
+        <div class="tabs">
+          <button class="tab active" id="registerTab" onclick="showRegister()">
+            Register
+          </button>
+
+          <button class="tab" id="loginTab" onclick="showLogin()">
+            Login
+          </button>
+        </div>
+
+        <form id="registerForm" onsubmit="registerUser(event)">
+          <div class="form-group">
+            <label for="registerName">Full Name</label>
+            <input
+              type="text"
+              id="registerName"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="registerPhone">Phone Number</label>
+            <input
+              type="tel"
+              id="registerPhone"
+              placeholder="07XXXXXXXX"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="registerEmail">Email Address</label>
+            <input
+              type="email"
+              id="registerEmail"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="registerPassword">Password</label>
+            <input
+              type="password"
+              id="registerPassword"
+              placeholder="Create a password"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="referralCode">Referral Code</label>
+            <input
+              type="text"
+              id="referralCode"
+              placeholder="Optional referral code"
+            />
+          </div>
+
+          <button class="submit-btn" type="submit">
+            Create Account
+          </button>
+
+          <div class="form-message" id="registerMessage"></div>
+        </form>
+
+        <form id="loginForm" onsubmit="loginUser(event)" style="display: none;">
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          <button class="submit-btn" type="submit">
+            Login
+          </button>
+
+          <div class="form-message" id="loginMessage"></div>
+        </form>
+      </div>
+    </section>
+
+    <section class="dashboard" id="dashboard">
+      <div class="dashboard-header">
+        <h2>Welcome to Your Dashboard</h2>
+        <p>Your available balance</p>
+        <div class="balance">KES 0.00</div>
+      </div>
+
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <span>Total Deposits</span>
+          <strong>KES 0.00</strong>
+        </div>
+
+        <div class="dashboard-card">
+          <span>Referral Earnings</span>
+          <strong>KES 0.00</strong>
+        </div>
+
+        <div class="dashboard-card">
+          <span>Total Referrals</span>
+          <strong>0</strong>
+        </div>
+      </div>
+
+      <div class="deposit-box">
+        <h3>Deposit Instructions</h3>
+
+        <p>
+          To make a deposit, send money to:
+          <span class="highlight">0705737127</span>
+        </p>
+
+        <p>
+          This number is also the People's Party customer service number.
+        </p>
+
+        <p>
+          After sending the money, keep your M-Pesa transaction code and
+          submit it when deposit verification is connected.
+        </p>
+
+        <p>
+          <strong>Withdrawal condition:</strong> You must have at least
+          one successful referral before requesting a withdrawal.
+        </p>
+
+        <p>
+          <strong>Withdrawal fee:</strong> A 12% withdrawal fee applies.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>People's Party</strong>
+    <p>Grow Together. Earn Together.</p>
+    <p>Customer Service: 0705737127</p>
+  </footer>
+
+  <script>
+    function showRegister() {
+      document.getElementById("registerForm").style.display = "block";
+      document.getElementById("loginForm").style.display = "none";
+
+      document.getElementById("registerTab").classList.add("active");
+      document.getElementById("loginTab").classList.remove("active");
+    }
+
+    function showLogin() {
+      document.getElementById("registerForm").style.display = "none";
+      document.getElementById("loginForm").style.display = "block";
+
+      document.getElementById("registerTab").classList.remove("active");
+      document.getElementById("loginTab").classList.add("active");
+    }
+
+    function registerUser(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("registerName").value;
+
+      document.getElementById("registerMessage").textContent =
+        "Registration form received for " +
+        name +
+        ". Backend connection will be added next.";
+
+      document.getElementById("registerForm").reset();
+    }
+
+    function loginUser(event) {
+      event.preventDefault();
+
+      document.getElementById("loginMessage").textContent =
+        "Login form received. Supabase authentication will be connected next.";
+
+      document.getElementById("loginForm").reset();
+    }
+  </script>
+</body>
+  </html>
