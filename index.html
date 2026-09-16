@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>People's Party</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
       background: #f4f7fb;
       color: #172033;
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
     }
 
     header {
@@ -34,11 +48,26 @@
       font-size: 25px;
     }
 
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
     nav a {
       color: white;
       text-decoration: none;
-      margin-left: 18px;
       font-size: 14px;
+    }
+
+    .nav-button {
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      background: transparent;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 7px;
+      cursor: pointer;
     }
 
     .hero {
@@ -75,6 +104,7 @@
       font-weight: bold;
       text-decoration: none;
       margin-right: 8px;
+      margin-bottom: 8px;
     }
 
     .button.secondary {
@@ -152,6 +182,7 @@
       border-radius: 12px;
       font-size: 23px;
       margin-bottom: 18px;
+      font-weight: bold;
     }
 
     .card h3 {
@@ -209,15 +240,18 @@
       font-weight: bold;
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group select {
       width: 100%;
       padding: 13px;
       border: 1px solid #d6dfe9;
       border-radius: 8px;
       outline: none;
+      background: white;
     }
 
-    .form-group input:focus {
+    .form-group input:focus,
+    .form-group select:focus {
       border-color: #0b8de3;
     }
 
@@ -233,34 +267,57 @@
       margin-top: 8px;
     }
 
+    .submit-btn:hover {
+      background: #064994;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .form-message {
       margin-top: 15px;
       font-size: 14px;
       color: #0756b8;
       text-align: center;
+      min-height: 20px;
+    }
+
+    .form-message.error {
+      color: #c62828;
+    }
+
+    .form-message.success {
+      color: #16803c;
     }
 
     .dashboard {
       display: none;
-      max-width: 900px;
+      max-width: 1000px;
       margin: auto;
     }
 
     .dashboard-header {
       background: linear-gradient(135deg, #0756b8, #0b8de3);
       color: white;
-      padding: 25px;
+      padding: 28px;
       border-radius: 15px;
       margin-bottom: 22px;
     }
 
     .dashboard-header h2 {
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+    }
+
+    .dashboard-header p {
+      opacity: 0.9;
     }
 
     .balance {
-      font-size: 36px;
+      font-size: 38px;
       font-weight: bold;
+      margin-top: 8px;
     }
 
     .dashboard-cards {
@@ -287,20 +344,29 @@
     .dashboard-card strong {
       font-size: 24px;
       color: #0756b8;
+      word-break: break-word;
     }
 
-    .deposit-box {
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .dashboard-box {
       background: white;
       padding: 25px;
       border-radius: 14px;
       border: 1px solid #e4eaf2;
+      margin-bottom: 22px;
     }
 
-    .deposit-box h3 {
+    .dashboard-box h3 {
       margin-bottom: 15px;
+      color: #172033;
     }
 
-    .deposit-box p {
+    .dashboard-box p {
       line-height: 1.7;
       color: #586577;
       margin-bottom: 10px;
@@ -311,17 +377,66 @@
       font-weight: bold;
     }
 
+    .referral-box {
+      background: #eaf3ff;
+      padding: 15px;
+      border-radius: 9px;
+      margin-top: 15px;
+      word-break: break-word;
+    }
+
+    .small-note {
+      font-size: 13px;
+      color: #687386;
+    }
+
+    .status-box {
+      padding: 13px;
+      border-radius: 8px;
+      background: #fff6df;
+      color: #8a6200;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .deposit-form {
+      margin-top: 20px;
+      border-top: 1px solid #e4eaf2;
+      padding-top: 20px;
+    }
+
+    .logout-btn {
+      background: #c62828;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
     footer {
       background: #101c2d;
       color: white;
       text-align: center;
-      padding: 25px;
+      padding: 28px;
       font-size: 14px;
     }
 
     footer p {
       color: #c1ccda;
       margin-top: 8px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #687386;
+      padding: 20px;
     }
 
     @media (max-width: 800px) {
@@ -335,12 +450,21 @@
       }
 
       .cards,
-      .dashboard-cards {
+      .dashboard-cards,
+      .dashboard-grid {
         grid-template-columns: 1fr;
       }
 
+      nav {
+        width: 100%;
+      }
+
       nav a {
-        margin-left: 8px;
+        font-size: 13px;
+      }
+
+      section {
+        padding: 40px 5%;
       }
     }
   </style>
@@ -353,7 +477,13 @@
     <nav>
       <a href="#home">Home</a>
       <a href="#how-it-works">How It Works</a>
-      <a href="#auth">Login/Register</a>
+      <a href="#auth" id="authNavLink">Login/Register</a>
+      <a href="#dashboard" id="dashboardNavLink" class="hidden">
+        Dashboard
+      </a>
+      <button id="navLogoutButton" class="nav-button hidden" onclick="logoutUser()">
+        Logout
+      </button>
     </nav>
   </header>
 
@@ -364,7 +494,8 @@
 
         <p>
           Welcome to People's Party, a referral-based platform where members
-          can deposit funds, invite friends, and track their account activity.
+          can create an account, make deposits, invite friends, and track
+          their account activity.
         </p>
 
         <a href="#auth" class="button">Get Started</a>
@@ -372,17 +503,20 @@
       </div>
 
       <div class="hero-card">
-        <h3>Account Preview</h3>
-        <p>Available balance</p>
+        <h3>People's Party</h3>
+        <p>Available balance preview</p>
         <div class="amount">KES 0.00</div>
-        <p>Invite friends and monitor your earnings from your dashboard.</p>
+        <p>
+          Register, access your dashboard, and use your referral link to
+          invite other members.
+        </p>
       </div>
     </section>
 
     <section id="how-it-works">
       <div class="section-title">
         <h2>How People's Party Works</h2>
-        <p>Simple steps to get started.</p>
+        <p>Follow these simple steps to get started.</p>
       </div>
 
       <div class="cards">
@@ -399,8 +533,8 @@
           <div class="icon">2</div>
           <h3>Make a Deposit</h3>
           <p>
-            Follow the deposit instructions and submit your transaction
-            details for verification.
+            Send your deposit to the official number and submit the
+            transaction code for verification.
           </p>
         </div>
 
@@ -408,7 +542,7 @@
           <div class="icon">3</div>
           <h3>Refer Friends</h3>
           <p>
-            Invite friends using your referral link and track your referral
+            Invite friends using your referral code and monitor your referral
             activity from your dashboard.
           </p>
         </div>
@@ -469,6 +603,7 @@
               type="password"
               id="registerPassword"
               placeholder="Create a password"
+              minlength="6"
               required
             />
           </div>
@@ -482,7 +617,7 @@
             />
           </div>
 
-          <button class="submit-btn" type="submit">
+          <button class="submit-btn" id="registerButton" type="submit">
             Create Account
           </button>
 
@@ -510,7 +645,7 @@
             />
           </div>
 
-          <button class="submit-btn" type="submit">
+          <button class="submit-btn" id="loginButton" type="submit">
             Login
           </button>
 
@@ -521,53 +656,147 @@
 
     <section class="dashboard" id="dashboard">
       <div class="dashboard-header">
-        <h2>Welcome to Your Dashboard</h2>
-        <p>Your available balance</p>
-        <div class="balance">KES 0.00</div>
+        <h2>Welcome, <span id="dashboardName">Member</span></h2>
+        <p>Your available wallet balance</p>
+        <div class="balance" id="walletBalance">KES 0.00</div>
       </div>
 
       <div class="dashboard-cards">
         <div class="dashboard-card">
           <span>Total Deposits</span>
-          <strong>KES 0.00</strong>
+          <strong id="totalDeposits">KES 0.00</strong>
         </div>
 
         <div class="dashboard-card">
           <span>Referral Earnings</span>
-          <strong>KES 0.00</strong>
+          <strong id="referralEarnings">KES 0.00</strong>
         </div>
 
         <div class="dashboard-card">
           <span>Total Referrals</span>
-          <strong>0</strong>
+          <strong id="totalReferrals">0</strong>
         </div>
       </div>
 
-      <div class="deposit-box">
-        <h3>Deposit Instructions</h3>
+      <div class="dashboard-grid">
+        <div>
+          <div class="dashboard-box">
+            <h3>Your Referral Information</h3>
 
-        <p>
-          To make a deposit, send money to:
-          <span class="highlight">0705737127</span>
-        </p>
+            <p>
+              Share your referral code with friends who want to join.
+            </p>
 
-        <p>
-          This number is also the People's Party customer service number.
-        </p>
+            <div class="referral-box">
+              <p>
+                <strong>Referral Code:</strong>
+                <span id="userReferralCode">Loading...</span>
+              </p>
 
-        <p>
-          After sending the money, keep your M-Pesa transaction code and
-          submit it when deposit verification is connected.
-        </p>
+              <p>
+                <strong>Referral Link:</strong>
+                <span id="userReferralLink">Loading...</span>
+              </p>
+            </div>
 
-        <p>
-          <strong>Withdrawal condition:</strong> You must have at least
-          one successful referral before requesting a withdrawal.
-        </p>
+            <p class="small-note">
+              Referral rewards are credited only after the required deposit
+              is confirmed by the platform.
+            </p>
+          </div>
 
-        <p>
-          <strong>Withdrawal fee:</strong> A 12% withdrawal fee applies.
-        </p>
+          <div class="dashboard-box">
+            <h3>Account Information</h3>
+
+            <p>
+              <strong>Name:</strong>
+              <span id="profileName">Loading...</span>
+            </p>
+
+            <p>
+              <strong>Phone:</strong>
+              <span id="profilePhone">Loading...</span>
+            </p>
+
+            <p>
+              <strong>Email:</strong>
+              <span id="profileEmail">Loading...</span>
+            </p>
+
+            <button class="logout-btn" onclick="logoutUser()">
+              Logout
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="dashboard-box">
+            <h3>Deposit Instructions</h3>
+
+            <p>
+              Send your deposit to:
+              <span class="highlight">0705737127</span>
+            </p>
+
+            <p>
+              This number is also the People's Party customer service number.
+            </p>
+
+            <p>
+              After sending the money, keep your M-Pesa transaction code and
+              submit it below.
+            </p>
+
+            <div class="deposit-form">
+              <form onsubmit="submitDeposit(event)">
+                <div class="form-group">
+                  <label for="depositAmount">Deposit Amount (KES)</label>
+                  <input
+                    type="number"
+                    id="depositAmount"
+                    min="1"
+                    step="0.01"
+                    placeholder="Enter amount"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="mpesaCode">M-Pesa Transaction Code</label>
+                  <input
+                    type="text"
+                    id="mpesaCode"
+                    placeholder="Example: QWE123ABC"
+                    required
+                  />
+                </div>
+
+                <button class="submit-btn" id="depositButton" type="submit">
+                  Submit Deposit
+                </button>
+
+                <div class="form-message" id="depositMessage"></div>
+              </form>
+            </div>
+          </div>
+
+          <div class="dashboard-box">
+            <h3>Withdrawal Information</h3>
+
+            <p>
+              You can request a withdrawal after you have at least
+              <strong>one successful referral</strong>.
+            </p>
+
+            <p>
+              A <strong>12% withdrawal fee</strong> applies to withdrawals.
+            </p>
+
+            <div class="status-box" id="withdrawalStatus">
+              Checking withdrawal eligibility...
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -579,12 +808,29 @@
   </footer>
 
   <script>
+    const SUPABASE_URL =
+      "https://rklxtxpqegveirqpnywo.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_-Bra-S7LPf6Snl26KMW3qg_Fuid5gCH";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    let currentUser = null;
+    let currentProfile = null;
+    let currentWallet = null;
+
     function showRegister() {
       document.getElementById("registerForm").style.display = "block";
       document.getElementById("loginForm").style.display = "none";
 
       document.getElementById("registerTab").classList.add("active");
       document.getElementById("loginTab").classList.remove("active");
+
+      clearMessages();
     }
 
     function showLogin() {
@@ -593,62 +839,472 @@
 
       document.getElementById("registerTab").classList.remove("active");
       document.getElementById("loginTab").classList.add("active");
+
+      clearMessages();
+    }
+
+    function clearMessages() {
+      document.getElementById("registerMessage").textContent = "";
+      document.getElementById("loginMessage").textContent = "";
+    }
+
+    function setMessage(elementId, message, type = "") {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.className = "form-message " + type;
+    }
+
+    function formatMoney(amount) {
+      const number = Number(amount || 0);
+
+      return (
+        "KES " +
+        number.toLocaleString("en-KE", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })
+      );
+    }
+
+    function createReferralCode(name, userId) {
+      const cleanName = (name || "MEMBER")
+        .replace(/[^a-zA-Z0-9]/g, "")
+        .substring(0, 5)
+        .toUpperCase();
+
+      const shortId = userId.replace(/-/g, "").substring(0, 6).toUpperCase();
+
+      return cleanName + shortId;
     }
 
     async function registerUser(event) {
-  event.preventDefault();
-
-  const name = document.getElementById("registerName").value.trim();
-  const phone = document.getElementById("registerPhone").value.trim();
-  const email = document.getElementById("registerEmail").value.trim();
-  const password = document.getElementById("registerPassword").value;
-  const referralCode = document.getElementById("referralCode").value.trim();
-
-  const message = document.getElementById("registerMessage");
-
-  message.textContent = "Creating your account...";
-
-  const { data, error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password,
-    options: {
-      data: {
-        full_name: name,
-        phone: phone,
-        referral_code: referralCode
-      }
-    }
-  });
-
-  if (error) {
-    message.textContent = error.message;
-    return;
-  }
-
-  message.textContent =
-    "Registration successful. Check your email to confirm your account.";
-
-  document.getElementById("registerForm").reset();
-};
-    }
-
-    function loginUser(event) {
       event.preventDefault();
 
-      document.getElementById("loginMessage").textContent =
-        "Login form received. Supabase authentication will be connected next.";
+      const button = document.getElementById("registerButton");
+      button.disabled = true;
+      button.textContent = "Creating Account...";
 
-      document.getElementById("loginForm").reset();
+      const name = document.getElementById("registerName").value.trim();
+      const phone = document.getElementById("registerPhone").value.trim();
+      const email = document.getElementById("registerEmail").value.trim();
+      const password = document.getElementById("registerPassword").value;
+      const enteredReferralCode =
+        document.getElementById("referralCode").value.trim();
+
+      setMessage("registerMessage", "Creating your account...");
+
+      try {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              full_name: name,
+              phone: phone,
+              referral_code: enteredReferralCode
+            }
+          }
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        if (!data.user) {
+          throw new Error("Account could not be created.");
+        }
+
+        const userId = data.user.id;
+        const referralCode = createReferralCode(name, userId);
+
+        const { error: profileError } = await supabaseClient
+          .from("profiles")
+          .upsert(
+            {
+              id: userId,
+              full_name: name,
+              phone: phone,
+              referral_code: referralCode
+            },
+            {
+              onConflict: "id"
+            }
+          );
+
+        if (profileError) {
+          console.error("Profile error:", profileError);
+        }
+
+        const { error: walletError } = await supabaseClient
+          .from("wallets")
+          .upsert(
+            {
+              user_id: userId,
+              balance: 0
+            },
+            {
+              onConflict: "user_id"
+            }
+          );
+
+        if (walletError) {
+          console.error("Wallet error:", walletError);
+        }
+
+        document.getElementById("registerForm").reset();
+
+        setMessage(
+          "registerMessage",
+          "Registration successful. Check your email if confirmation is required, then log in.",
+          "success"
+        );
+
+        showLogin();
+      } catch (error) {
+        console.error(error);
+
+        setMessage(
+          "registerMessage",
+          error.message || "Registration failed.",
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = "Create Account";
+      }
     }
+
+    async function loginUser(event) {
+      event.preventDefault();
+
+      const button = document.getElementById("loginButton");
+      button.disabled = true;
+      button.textContent = "Logging In...";
+
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      setMessage("loginMessage", "Logging in...");
+
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        currentUser = data.user;
+
+        document.getElementById("loginForm").reset();
+        document.getElementById("auth").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+
+        document.getElementById("authNavLink").classList.add("hidden");
+        document.getElementById("dashboardNavLink").classList.remove("hidden");
+        document.getElementById("navLogoutButton").classList.remove("hidden");
+
+        await loadDashboard();
+
+        document.getElementById("dashboard").scrollIntoView({
+          behavior: "smooth"
+        });
+      } catch (error) {
+        console.error(error);
+
+        setMessage(
+          "loginMessage",
+          error.message || "Login failed.",
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = "Login";
+      }
+    }
+
+    async function loadDashboard() {
+      if (!currentUser) {
+        return;
+      }
+
+      document.getElementById("dashboardName").textContent = "Member";
+      document.getElementById("profileEmail").textContent =
+        currentUser.email || "Not available";
+
+      const { data: profile, error: profileError } = await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
+      if (profileError) {
+        console.error("Loading profile failed:", profileError);
+      }
+
+      currentProfile = profile;
+
+      const { data: wallet, error: walletError } = await supabaseClient
+        .from("wallets")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+      if (walletError) {
+        console.error("Loading wallet failed:", walletError);
+      }
+
+      currentWallet = wallet;
+
+      const name =
+        profile?.full_name ||
+        currentUser.user_metadata?.full_name ||
+        "Member";
+
+      const phone =
+        profile?.phone ||
+        currentUser.user_metadata?.phone ||
+        "Not available";
+
+      const referralCode =
+        profile?.referral_code ||
+        createReferralCode(name, currentUser.id);
+
+      const balance =
+        wallet?.balance ||
+        wallet?.available_balance ||
+        0;
+
+      document.getElementById("dashboardName").textContent = name;
+      document.getElementById("profileName").textContent = name;
+      document.getElementById("profilePhone").textContent = phone;
+      document.getElementById("profileEmail").textContent =
+        currentUser.email || "Not available";
+
+      document.getElementById("walletBalance").textContent =
+        formatMoney(balance);
+
+      document.getElementById("userReferralCode").textContent = referralCode;
+
+      const referralLink =
+        window.location.origin +
+        window.location.pathname +
+        "?ref=" +
+        encodeURIComponent(referralCode);
+
+      document.getElementById("userReferralLink").textContent = referralLink;
+
+      await loadDashboardStatistics();
+    }
+
+    async function loadDashboardStatistics() {
+      if (!currentUser) {
+        return;
+      }
+
+      let totalDeposits = 0;
+      let referralEarnings = 0;
+      let totalReferrals = 0;
+
+      const { data: deposits, error: depositsError } = await supabaseClient
+        .from("deposits")
+        .select("*")
+        .eq("user_id", currentUser.id);
+
+      if (depositsError) {
+        console.error("Deposits error:", depositsError);
+      }
+
+      if (deposits) {
+        deposits.forEach((deposit) => {
+          const status = String(deposit.status || "").toLowerCase();
+
+          if (
+            status === "confirmed" ||
+            status === "approved" ||
+            status === "completed"
+          ) {
+            totalDeposits += Number(
+              deposit.amount || deposit.deposit_amount || 0
+            );
+          }
+        });
+      }
+
+      const { data: referrals, error: referralsError } = await supabaseClient
+        .from("referrals")
+        .select("*")
+        .eq("referrer_id", currentUser.id);
+
+      if (referralsError) {
+        console.error("Referrals error:", referralsError);
+      }
+
+      if (referrals) {
+        totalReferrals = referrals.length;
+
+        referrals.forEach((referral) => {
+          referralEarnings += Number(
+            referral.reward_amount ||
+            referral.commission ||
+            referral.amount ||
+            0
+          );
+        });
+      }
+
+      document.getElementById("totalDeposits").textContent =
+        formatMoney(totalDeposits);
+
+      document.getElementById("referralEarnings").textContent =
+        formatMoney(referralEarnings);
+
+      document.getElementById("totalReferrals").textContent =
+        totalReferrals;
+
+      const withdrawalStatus =
+        document.getElementById("withdrawalStatus");
+
+      if (totalReferrals >= 1) {
+        withdrawalStatus.textContent =
+          "You have at least one referral. You may request a withdrawal after your balance and account have been verified.";
+        withdrawalStatus.style.background = "#e8f7ed";
+        withdrawalStatus.style.color = "#176b35";
+      } else {
+        withdrawalStatus.textContent =
+          "You need at least one successful referral before requesting a withdrawal.";
+      }
+    }
+
+    async function submitDeposit(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        setMessage(
+          "depositMessage",
+          "Please log in before submitting a deposit.",
+          "error"
+        );
+        return;
+      }
+
+      const button = document.getElementById("depositButton");
+      button.disabled = true;
+      button.textContent = "Submitting...";
+
+      const amount = Number(
+        document.getElementById("depositAmount").value
+      );
+
+      const mpesaCode = document
+        .getElementById("mpesaCode")
+        .value.trim()
+        .toUpperCase();
+
+      setMessage("depositMessage", "Submitting deposit...");
+
+      try {
+        if (!amount || amount <= 0) {
+          throw new Error("Enter a valid deposit amount.");
+        }
+
+        if (!mpesaCode) {
+          throw new Error("Enter your M-Pesa transaction code.");
+        }
+
+        const { error } = await supabaseClient
+          .from("deposits")
+          .insert({
+            user_id: currentUser.id,
+            amount: amount,
+            mpesa_code: mpesaCode,
+            status: "pending"
+          });
+
+        if (error) {
+          throw error;
+        }
+
+        document.getElementById("depositAmount").value = "";
+        document.getElementById("mpesaCode").value = "";
+
+        setMessage(
+          "depositMessage",
+          "Deposit submitted successfully. It is waiting for verification.",
+          "success"
+        );
+
+        await loadDashboardStatistics();
+      } catch (error) {
+        console.error(error);
+
+        setMessage(
+          "depositMessage",
+          error.message || "Deposit submission failed.",
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = "Submit Deposit";
+      }
+    }
+
+    async function logoutUser() {
+      const { error } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        console.error("Logout error:", error);
+      }
+
+      currentUser = null;
+      currentProfile = null;
+      currentWallet = null;
+
+      document.getElementById("dashboard").style.display = "none";
+      document.getElementById("auth").style.display = "block";
+
+      document.getElementById("authNavLink").classList.remove("hidden");
+      document.getElementById("dashboardNavLink").classList.add("hidden");
+      document.getElementById("navLogoutButton").classList.add("hidden");
+
+      showLogin();
+
+      window.location.hash = "auth";
+    }
+
+    async function checkExistingSession() {
+      const { data, error } = await supabaseClient.auth.getSession();
+
+      if (error) {
+        console.error("Session error:", error);
+        return;
+      }
+
+      if (data.session) {
+        currentUser = data.session.user;
+
+        document.getElementById("auth").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+
+        document.getElementById("authNavLink").classList.add("hidden");
+        document.getElementById("dashboardNavLink").classList.remove("hidden");
+        document.getElementById("navLogoutButton").classList.remove("hidden");
+
+        await loadDashboard();
+      }
+    }
+
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        currentUser = session.user;
+      } else {
+        currentUser = null;
+      }
+    });
+
+    checkExistingSession();
   </script>
-  const SUPABASE_URL = "https://rklxtxpqegveirqpnywo.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_-Bra-S7LPf6Snl26KMW3qg_Fuid5gCH";
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
 </body>
-  </html>
+</html>
