@@ -1,2 +1,868 @@
 const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>People's Party Investment Portal</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #222;
+    }
+
+    header {
+      background: #0b5ed7;
+      color: white;
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    header h1 {
+      font-size: 23px;
+    }
+
+    header a,
+    header button {
+      background: white;
+      color: #0b5ed7;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 1150px;
+      margin: 25px auto;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0b5ed7, #063b87);
+      color: white;
+      padding: 35px 25px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+    }
+
+    .hero h2 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      line-height: 1.6;
+    }
+
+    .auth-card,
+    .dashboard,
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.07);
+      margin-bottom: 25px;
+    }
+
+    .auth-card {
+      max-width: 500px;
+      margin: 30px auto;
+    }
+
+    .auth-card h2,
+    .card h2 {
+      margin-bottom: 20px;
+      color: #0b5ed7;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #e9eef7;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .tabs button.active {
+      background: #0b5ed7;
+      color: white;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccd3dd;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 13px;
+      background: #0b5ed7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .btn:hover {
+      background: #084298;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+    }
+
+    .btn-success {
+      background: #198754;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 6px;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .message.success {
+      display: block;
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .message.error {
+      display: block;
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .dashboard-header h2 {
+      color: #0b5ed7;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .stat-box h3 {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .stat-box p {
+      font-size: 23px;
+      font-weight: bold;
+      color: #0b5ed7;
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .plan {
+      border: 1px solid #dce3ed;
+      border-radius: 10px;
+      padding: 20px;
+      background: #fff;
+    }
+
+    .plan h3 {
+      color: #0b5ed7;
+      margin-bottom: 12px;
+    }
+
+    .plan .amount {
+      font-size: 25px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .plan p {
+      margin: 8px 0;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .plan button {
+      margin-top: 15px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .action-card {
+      background: #f8f9fa;
+      border: 1px solid #e1e5eb;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .action-card h3 {
+      color: #0b5ed7;
+      margin-bottom: 10px;
+    }
+
+    .action-card p {
+      color: #555;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    th,
+    td {
+      padding: 13px;
+      border-bottom: 1px solid #e5e5e5;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f1f5fa;
+      color: #0b5ed7;
+    }
+
+    .status {
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .status.pending {
+      background: #fff3cd;
+      color: #664d03;
+    }
+
+    .status.approved {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .status.rejected {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    footer {
+      background: #062b63;
+      color: white;
+      text-align: center;
+      padding: 25px;
+      margin-top: 35px;
+      line-height: 1.8;
+    }
+
+    .small-note {
+      font-size: 13px;
+      color: #666;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .plans {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero h2 {
+        font-size: 24px;
+      }
+
+      .stats,
+      .plans {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-card,
+      .dashboard,
+      .card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>People's Party</h1>
+
+    <div>
+      <a href="index.html">Home</a>
+      <button id="logoutButton" class="hidden">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h2>People's Party Investment Portal</h2>
+      <p>
+        Manage your investment account, view available plans, submit deposits,
+        request withdrawals, and track your account activity.
+      </p>
+    </section>
+
+    <!-- AUTH SECTION -->
+    <section id="authSection" class="auth-card">
+      <div class="tabs">
+        <button id="loginTab" class="active">Login</button>
+        <button id="registerTab">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm">
+        <h2>Login to Your Account</h2>
+
+        <div class="form-group">
+          <label for="loginEmail">Email Address</label>
+          <input
+            type="email"
+            id="loginEmail"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input
+            type="password"
+            id="loginPassword"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+        <div id="loginMessage" class="message"></div>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="registerForm" class="hidden">
+        <h2>Create an Account</h2>
+
+        <div class="form-group">
+          <label for="registerName">Full Name</label>
+          <input
+            type="text"
+            id="registerName"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="registerPhone">Phone Number</label>
+          <input
+            type="tel"
+            id="registerPhone"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="registerEmail">Email Address</label>
+          <input
+            type="email"
+            id="registerEmail"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="registerPassword">Password</label>
+          <input
+            type="password"
+            id="registerPassword"
+            placeholder="Create a password"
+            minlength="6"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="registerReferral">Referral Code Optional</label>
+          <input
+            type="text"
+            id="registerReferral"
+            placeholder="Enter referral code"
+          />
+        </div>
+
+        <button type="submit" class="btn">Create Account</button>
+        <div id="registerMessage" class="message"></div>
+
+        <p class="small-note">
+          After registration, check your email if email confirmation is enabled
+          in Supabase.
+        </p>
+      </form>
+    </section>
+
+    <!-- DASHBOARD SECTION -->
+    <section id="dashboardSection" class="dashboard hidden">
+      <div class="dashboard-header">
+        <div>
+          <h2>Welcome, <span id="userName">Member</span></h2>
+          <p class="small-note">
+            Referral Code:
+            <strong id="userReferralCode">Loading...</strong>
+          </p>
+        </div>
+
+        <button id="refreshButton" class="btn" style="width:auto;">
+          Refresh Account
+        </button>
+      </div>
+
+      <div class="stats">
+        <div class="stat-box">
+          <h3>Account Balance</h3>
+          <p>KES <span id="accountBalance">0.00</span></p>
+        </div>
+
+        <div class="stat-box">
+          <h3>Total Invested</h3>
+          <p>KES <span id="totalInvested">0.00</span></p>
+        </div>
+
+        <div class="stat-box">
+          <h3>Total Earnings</h3>
+          <p>KES <span id="totalEarnings">0.00</span></p>
+        </div>
+
+        <div class="stat-box">
+          <h3>Referral Earnings</h3>
+          <p>KES <span id="referralEarnings">0.00</span></p>
+        </div>
+      </div>
+
+      <!-- INVESTMENT PLANS -->
+      <section class="card">
+        <h2>Available Investment Plans</h2>
+
+        <div id="plansContainer" class="plans">
+          <p>Loading investment plans...</p>
+        </div>
+      </section>
+
+      <!-- ACTIONS -->
+      <section class="card">
+        <h2>Account Actions</h2>
+
+        <div class="actions">
+          <div class="action-card">
+            <h3>Make a Deposit</h3>
+            <p>
+              Submit your deposit details for verification by the administrator.
+            </p>
+            <button id="showDepositButton" class="btn">
+              Deposit Funds
+            </button>
+          </div>
+
+          <div class="action-card">
+            <h3>Request Withdrawal</h3>
+            <p>
+              Submit a withdrawal request after your investment has been
+              approved.
+            </p>
+            <button id="showWithdrawalButton" class="btn btn-success">
+              Withdraw Funds
+            </button>
+          </div>
+
+          <div class="action-card">
+            <h3>Referral Program</h3>
+            <p>
+              Share your referral code and track your referral commissions.
+            </p>
+            <button id="copyReferralButton" class="btn">
+              Copy Referral Code
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- DEPOSIT FORM -->
+      <section id="depositCard" class="card hidden">
+        <h2>Submit Deposit</h2>
+
+        <form id="depositForm">
+          <div class="form-group">
+            <label for="depositPlan">Select Investment Plan</label>
+            <select id="depositPlan" required>
+              <option value="">Select a plan</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="depositAmount">Amount Deposited</label>
+            <input
+              type="number"
+              id="depositAmount"
+              min="100"
+              step="1"
+              placeholder="Enter amount"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="depositPhone">M-Pesa Phone Number</label>
+            <input
+              type="tel"
+              id="depositPhone"
+              placeholder="07XXXXXXXX"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="transactionCode">M-Pesa Transaction Code</label>
+            <input
+              type="text"
+              id="transactionCode"
+              placeholder="Enter transaction code"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn">
+            Submit Deposit
+          </button>
+
+          <div id="depositMessage" class="message"></div>
+        </form>
+      </section>
+
+      <!-- WITHDRAWAL FORM -->
+      <section id="withdrawalCard" class="card hidden">
+        <h2>Request Withdrawal</h2>
+
+        <form id="withdrawalForm">
+          <div class="form-group">
+            <label for="withdrawalAmount">Withdrawal Amount</label>
+            <input
+              type="number"
+              id="withdrawalAmount"
+              min="1"
+              step="1"
+              placeholder="Enter amount"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="withdrawalPhone">M-Pesa Phone Number</label>
+            <input
+              type="tel"
+              id="withdrawalPhone"
+              placeholder="07XXXXXXXX"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-success">
+            Submit Withdrawal Request
+          </button>
+
+          <div id="withdrawalMessage" class="message"></div>
+        </form>
+      </section>
+
+      <!-- INVESTMENT HISTORY -->
+      <section class="card">
+        <h2>My Investments</h2>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Plan</th>
+                <th>Amount</th>
+                <th>Expected Return</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+
+            <tbody id="investmentsTable">
+              <tr>
+                <td colspan="5">No investments found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- DEPOSIT HISTORY -->
+      <section class="card">
+        <h2>Deposit History</h2>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>Phone</th>
+                <th>Transaction Code</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+
+            <tbody id="depositsTable">
+              <tr>
+                <td colspan="5">No deposits found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- WITHDRAWAL HISTORY -->
+      <section class="card">
+        <h2>Withdrawal History</h2>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+
+            <tbody id="withdrawalsTable">
+              <tr>
+                <td colspan="4">No withdrawals found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>People's Party Investment Portal</strong></p>
+    <p>All deposits and withdrawals are subject to verification and approval.</p>
+    <p>© 2026 People's Party. All rights reserved.</p>
+  </footer>
+
+  <script>
+    /*
+      REPLACE THESE TWO VALUES WITH YOUR SUPABASE DETAILS
+    */
+
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let currentProfile = null;
+    let investmentPlans = [];
+
+    const authSection = document.getElementById("authSection");
+    const dashboardSection = document.getElementById("dashboardSection");
+    const logoutButton = document.getElementById("logoutButton");
+
+    const loginTab = document.getElementById("loginTab");
+    const registerTab = document.getElementById("registerTab");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+
+    const loginMessage = document.getElementById("loginMessage");
+    const registerMessage = document.getElementById("registerMessage");
+    const depositMessage = document.getElementById("depositMessage");
+    const withdrawalMessage = document.getElementById("withdrawalMessage");
+
+    const depositCard = document.getElementById("depositCard");
+    const withdrawalCard = document.getElementById("withdrawalCard");
+
+    function showMessage(element, message, type) {
+      element.textContent = message;
+      element.className = "message " + type;
+    }
+
+    function clearMessage(element) {
+      element.textContent = "";
+      element.className = "message";
+    }
+
+    function formatMoney(amount) {
+      return Number(amount || 0).toLocaleString("en-KE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function formatDate(date) {
+      if (!date) return "-";
+
+      return new Date(date).toLocaleDateString("en-KE", {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+    }
+
+    function statusBadge(status) {
+      const safeStatus = status || "pending";
+      return `<span class="status ${safeStatus.toLowerCase()}">
+        ${safeStatus}
+      </span>`;
+    }
+
+    function generateReferralCode(name, userId) {
+      const firstPart = (name || "USER")
+        .replace(/[^a-zA-Z]/g, "")
+        .substring(0, 5)
+        .toUpperCase();
+
+      return firstPart + userId.substring(0, 6).toUpperCase();
+    }
+
+    loginTab.addEventListener("click", () => {
+      loginTab.classList.add("active");
+      registerTab.classList.remove("active");
+      loginForm.classList.remove("hidden");
+      registerForm.classList.add("hidden");
+      clearMessage(loginMessage);
+      clearMessage(registerMessage);
+    });
+
+    registerTab.addEventListener("click", () => {
+      registerTab.classList.add("active");
+      loginTab.classList.remove("active");
+      registerForm.classList.remove("hidden");
+      loginForm.classList.add("hidden");
+      clearMessage(loginMessage);
+      clearMessage(registerMessage);
+    });
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      clearMessage(loginMessage);
+
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      const { data, error } = await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        showMessage(loginMessage, error.message, "error");
+        return;
+      }
+
+      currentUser = data.user;
+      await loadUserDashboard();
+    });
+
+    registerForm.addEventListene
